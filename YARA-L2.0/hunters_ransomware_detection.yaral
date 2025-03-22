@@ -1,0 +1,93 @@
+rule Hunters_Ransomware_Detection {
+  meta:
+    created =  "2025-03-21"
+    modified = "2025-03-21"
+    version = "1.0"
+    author =  "NCINGA SOC"
+    contributor = "soc@ncinga.net"
+    description =  "Rule to detect Hunter Ransomware and related TTPs"
+    confidence = "unknown"
+    severity =  "High"
+    scenario = ""
+    actor = "Hunters"
+    falsepositives =  "unknown"
+    status = ""
+    logsource =  "EDR"
+    cyderes_managed = "True"
+
+  events:
+    (
+      
+      re.regex($event.principal.process.file.full_path, `.*(\\| |^)(hunter.*|locker)(\.bat|\.exe|\.bin)( |$).*`) nocase or 
+      re.regex($event.target.process.file.full_path, `.*(\\| |^)(hunter.*|locker)(\.bat|\.exe|\.bin)( |$).*`) nocase or
+      re.regex($event.principal.process.command_line, `.*(\\| |^)(hunter.*|locker)(\.bat|\.exe|\.bin)( |$).*`) nocase or
+      re.regex($event.target.process.command_line, `.*(\\| |^)(hunter.*|locker)(\.bat|\.exe|\.bin)( |$).*`) nocase or
+      re.regex($event.principal.application, `.*(\\| |^)(hunter.*|locker)(\.bat|\.exe|\.bin)( |$).*`) nocase or
+      re.regex($event.target.application, `.*(\\| |^)(hunter.*|locker)(\.bat|\.exe|\.bin)( |$).*`) nocase or
+
+      re.regex($event.principal.process.command_line, `.*vssadmin\.exe.*delete.*shadows.*\/all.*\/quiet.*`) nocase or
+      re.regex($event.target.process.command_line, `.*vssadmin\.exe.*delete.*shadows.*\/all.*\/quiet.*`) nocase or
+
+      re.regex($event.principal.process.command_line, `.*cmd.*\/c.*(hunter.*|locker)\.(bat|exe|bin).*?>NUL.*?2>NUL.*`) nocase or
+      re.regex($event.target.process.command_line, `.*cmd.*\/c.*((hunter.*|locker)\.(bat|exe|bin)|shadow\.bat).*?>NUL.*?2>NUL.*`) nocase or
+
+      re.regex($event.principal.process.command_line, `.*comsvcs\.dll.*MinDump.*752.*lsass\.dmp.*full.*`) nocase or
+      re.regex($event.target.process.command_line, `.*comsvcs\.dll.*MinDump.*752.*lsass\.dmp.*full.*`) nocase or
+
+      re.regex($event.principal.process.command_line, `.*cmd\.exe.*\/C.*reg.*add.*HKLM\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\WDigest.*\/v.*UseLogonCredential.*\/t.*REG_DWORD.*\/d.*1.*&&.*gpupdate.*\/force.*`) nocase or
+      re.regex($event.target.process.command_line, `.*cmd\.exe.*\/C.*reg.*add.*HKLM\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\WDigest.*\/v.*UseLogonCredential.*\/t.*REG_DWORD.*\/d.*1.*&&.*gpupdate.*\/force.*`) nocase or
+
+      
+      $event.target.process.file.sha256 = "94b6cf6c30f525614672a94b8b9788b46cbe061f89ccbb994507406404e027af" nocase or
+      $event.principal.process.file.sha256 = "94b6cf6c30f525614672a94b8b9788b46cbe061f89ccbb994507406404e027af" nocase or
+
+      $event.target.process.file.sha256 = "24de8de24001bc358c58aa946a28c545aaf9657b66bd5383c2d5a341c5d3c355" nocase or
+      $event.principal.process.file.sha256 = "24de8de24001bc358c58aa946a28c545aaf9657b66bd5383c2d5a341c5d3c355" nocase or
+
+      $event.target.process.file.sha256 = "c4d39db132b92514085fe269db90511484b7abe4620286f6b0a30aa475f64c3e" nocase or
+      $event.principal.process.file.sha256 = "c4d39db132b92514085fe269db90511484b7abe4620286f6b0a30aa475f64c3e" nocase or
+
+      $event.target.process.file.sha256 = "35d8eb3a18f55806333f187f295df747150048c5cdd011acba9e294fa57ad991" nocase or
+      $event.principal.process.file.sha256 = "35d8eb3a18f55806333f187f295df747150048c5cdd011acba9e294fa57ad991" nocase or
+
+      $event.target.process.file.sha256 = "ad9bce48947087ec1ea5128ad1c3e8f91ea645051214b28dd1f33e84fc6338e9" nocase or
+      $event.principal.process.file.sha256 = "ad9bce48947087ec1ea5128ad1c3e8f91ea645051214b28dd1f33e84fc6338e9" nocase or
+
+      $event.target.process.file.sha256 = "c40577e0b5784fb65bcb285d578bd2c8b5dd5ed654edb4c3bee5d8f86e86a50e" nocase or
+      $event.principal.process.file.sha256 = "c40577e0b5784fb65bcb285d578bd2c8b5dd5ed654edb4c3bee5d8f86e86a50e" nocase or
+
+      $event.target.process.file.sha256 = "5936db26b48ab9c0ede78de5ffedecaf3da72a9658f90408739ed139dcc6876e" nocase or
+      $event.principal.process.file.sha256 = "5936db26b48ab9c0ede78de5ffedecaf3da72a9658f90408739ed139dcc6876e" nocase or
+
+      $event.target.process.file.sha256 = "ffdae7ec0045db865f3b6174a64154fa016ae55b07e325ed74eb3c3f495a9755" nocase or
+      $event.principal.process.file.sha256 = "ffdae7ec0045db865f3b6174a64154fa016ae55b07e325ed74eb3c3f495a9755" nocase or
+
+      $event.target.process.file.sha256 = "1fcb1e861fc7219d080430388630b438c2de7f09272cfa32799bb51aa6083c47" nocase or
+      $event.principal.process.file.sha256 = "1fcb1e861fc7219d080430388630b438c2de7f09272cfa32799bb51aa6083c47" nocase or
+
+      $event.target.process.file.sha256 = "fe3c25afdf9ba3545b6fb80d4b0d6b5da3181df8894d99d503673b3297e3fcad" nocase or
+      $event.principal.process.file.sha256 = "fe3c25afdf9ba3545b6fb80d4b0d6b5da3181df8894d99d503673b3297e3fcad" nocase or
+
+      $event.target.process.file.sha256 = "ef55b1236b173575ebf885efafd5cc02287b6f701cd39227e54bb95b18623016" nocase or
+      $event.principal.process.file.sha256 = "ef55b1236b173575ebf885efafd5cc02287b6f701cd39227e54bb95b18623016" nocase or
+
+      $event.target.process.file.sha256 = "caaa4c02c3903e76f7e85c84fe59ddbcbbd0bb51e87630c501b76e688a8a3480" nocase or
+      $event.principal.process.file.sha256 = "caaa4c02c3903e76f7e85c84fe59ddbcbbd0bb51e87630c501b76e688a8a3480" nocase or
+
+      $event.target.process.file.sha256 = "d7b5b67aa559be667fb17868d20e5d8d7570064ceb6ee40e8180a5a8365f7a78" nocase or
+      $event.principal.process.file.sha256 = "d7b5b67aa559be667fb17868d20e5d8d7570064ceb6ee40e8180a5a8365f7a78" nocase or
+
+      $event.target.process.file.sha256 = "2324b33f925ee82bccde9e0e514933c9df6a4ca1af4be6726fe11f3a87f70206" nocase or
+      $event.principal.process.file.sha256 = "2324b33f925ee82bccde9e0e514933c9df6a4ca1af4be6726fe11f3a87f70206" nocase or
+
+      $event.target.process.file.sha256 = "861d1f84a99049948c9f936b6ee8c9a126b8ce03526412aaac8a70647fa24f77" nocase or
+      $event.principal.process.file.sha256 = "861d1f84a99049948c9f936b6ee8c9a126b8ce03526412aaac8a70647fa24f77" nocase
+    )
+
+  outcome:
+    $risk_score = 80
+
+  condition:
+    $event
+}
+

@@ -1,0 +1,32 @@
+rule Hunters_International_Initial_Access {
+  
+  meta:
+    version = "1.0"
+    created = "2025-03-21"
+    modified = ""
+    author = "NCINGA_SOC"
+    description = "Detects Oracle Server Vulnrability CVE-2020-14644"
+    severity = "High"
+    reference = "NCINGA"
+     
+  events:
+    $event.metadata.event_type = $event_type
+    $event.target.process.command_line = /(?i)cmd\.exe|java\.exe|winrar\.exe|vssadmin\.exe|wmic\.exe|bcdedit\.exe/
+    $event.target.process.command_line = /(?i)cmd\.exe \/c whoami|cd \/d C:\\\\Intel|reg save hklm\\sam|ntdsutil "ac i ntds"/
+    $event.target.process.command_line = /(?i)-xdebug.*-xrunjdwp:transport=dt_socket,address=8453,server=y,suspend=n/
+    $event.target.process.command_line = /(?i)vssadmin\.exe delete shadows \/all \/quiet|wmic\.exe shadowcopy delete|bcdedit\.exe \/set {current} nx alwaysoff/
+    $event.target.process.file.full_path = /(?i)c:\\\\program files\\\\winrar\\\\winrar\.exe|c:\\\\users\\\\.*\\\\encrypter_windows_x64\.exe/
+    $event.target.port = 8453
+    $event.network.ip_protocol = "TCP"
+
+  match:
+    $event_type over 15m
+
+  outcome:
+    $process_count = count_distinct($event.metadata.id)
+    $alert_risk_score = if($process_count > 5, 80, 50)
+
+  condition:
+    $event
+}
+
